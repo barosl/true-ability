@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>김병호 프로님 음성 롤링페이퍼</title>
+<title>김병호 프로님 정년퇴직 기념 음성 롤링페이퍼</title>
 <meta name="description" content="43년 동안 함께 걸어온 시간에 감사하며, True Ability 동료들이 목소리로 전하는 인사입니다. 바로 듣거나 내려받거나 글로 읽을 수 있습니다.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0B1440">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:title" content="김병호 프로님 음성 롤링페이퍼">
+<meta property="og:title" content="김병호 프로님 정년퇴직 기념 음성 롤링페이퍼">
 <meta property="og:description" content="True Ability 동료들의 목소리 · 11분 20초">
-<meta property="og:url" content="https://barosl.github.io/true-ability/rolling-paper/">
-<meta property="og:image" content="https://barosl.github.io/true-ability/rolling-paper/assets/og.png">
+<meta property="og:url" content="https://barosl.github.io/true-ability/anycom-retirement/">
+<meta property="og:image" content="https://barosl.github.io/true-ability/anycom-retirement/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -352,13 +352,13 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
       </div>
 
       <div class="intro">
-        <p class="eyebrow" aria-hidden="true"><i></i>Voice Rolling Paper</p>
-        <h1><span class="a">김병호 프로님께 드리는</span> <span class="b">음성 롤링페이퍼</span></h1>
+        <p class="eyebrow" aria-hidden="true"><i></i>Anycom's Retirement</p>
+        <h1><span class="a">김병호 프로님 정년퇴직 기념</span> <span class="b">음성 롤링페이퍼</span></h1>
         <p class="lede">43년 동안 함께 걸어온 시간에 감사하며, True Ability 동료들이 목소리로 인사를 전합니다. 아래 재생 버튼을 누르면 바로 들을 수 있고, 파일로 내려받거나 글로 읽을 수도 있습니다.</p>
       </div>
 
       <section class="player" aria-label="음성 듣기">
-        <audio id="audio" src="rolling-paper.mp3" preload="metadata" controls>
+        <audio id="audio" src="anycom-retirement.mp3" preload="metadata" controls>
           이 브라우저에서는 음성을 바로 재생할 수 없습니다. 아래 링크로 내려받아 들어 주세요.
         </audio>
 
@@ -410,11 +410,11 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
         <p class="err" id="err" role="alert" hidden></p>
 
         <div class="dl-row">
-          <a class="dl primary" href="rolling-paper.mp3" download="김병호 프로님 음성 롤링페이퍼.mp3">
+          <a class="dl primary" href="anycom-retirement.mp3" download="김병호 프로님 정년퇴직 기념 음성 롤링페이퍼.mp3">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
             <span>음성 파일 내려받기<small>MP3 · 16MB · 11분 20초</small></span>
           </a>
-          <a class="dl secondary" href="transcript.txt" download="김병호 프로님 음성 롤링페이퍼 (글).txt">
+          <a class="dl secondary" href="transcript.txt" download="김병호 프로님 정년퇴직 기념 음성 롤링페이퍼 (글).txt">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
             <span>글로 옮긴 파일 내려받기<small>TXT · 메시지 전문</small></span>
           </a>
@@ -737,7 +737,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
   const resumeBtn = $('#resume'), resumeLabel = $('#resume-label');
   const mini = $('#mini'), miniPlay = $('#mini-play'), miniNow = $('#mini-now'), miniTime = $('#mini-time');
   const follow = $('#follow');
-  const STORE_KEY = 'kbh-rolling-paper:pos';
+  const STORE_KEY = 'anycom-retirement:pos';
   let D = 680.5;
 
   /* ---------- progressive enhancement: swap native controls for ours ---------- */
@@ -956,7 +956,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
   if ('mediaSession' in navigator) {
     try {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: '김병호 프로님 음성 롤링페이퍼',
+        title: '김병호 프로님 정년퇴직 기념 음성 롤링페이퍼',
         artist: 'True Ability 동료 일동',
         album: '2026. 11. 30.',
         artwork: [{ src: new URL('assets/icon.png', location.href).href, sizes: '512x512', type: 'image/png' }],
