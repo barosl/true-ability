@@ -99,8 +99,6 @@ button,select,input{font:inherit;color:inherit;}
   background:rgba(255,255,255,.05);border-radius:999px;padding:6px 14px;white-space:nowrap;}
 
 .intro{max-width:760px;}
-.eyebrow{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.22em;color:var(--amber);text-transform:uppercase;margin-bottom:14px;}
-.eyebrow i{width:26px;height:2px;border-radius:2px;background:var(--orange);display:inline-block;}
 h1{font-weight:900;letter-spacing:-.02em;line-height:1.12;}
 h1 .a{display:block;font-size:clamp(22px,4.2vw,34px);font-weight:700;color:#EAEDF7;margin-bottom:6px;}
 h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
@@ -195,9 +193,6 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
 .paper::before{content:"";position:absolute;left:0;right:0;top:-1px;height:28px;
   background:linear-gradient(180deg,rgba(7,10,24,.18),transparent);pointer-events:none;}
 .paper-head{max-width:720px;margin:0 auto 36px;text-align:center;}
-.paper-head .eyebrow{justify-content:center;color:#9C4F07;}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .paper-head .eyebrow{color:var(--amber);}}
-:root[data-theme="dark"] .paper-head .eyebrow{color:var(--amber);}
 .paper-head h2{font-size:clamp(30px,5vw,42px);font-weight:900;letter-spacing:-.02em;line-height:1.2;}
 .paper-head p{margin-top:12px;color:var(--muted);font-size:17px;line-height:1.7;}
 .follow{display:inline-flex;align-items:center;gap:10px;margin-top:18px;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;
@@ -430,7 +425,6 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
   <section class="paper" id="transcript" aria-labelledby="t-title">
     <div class="wrap">
       <div class="paper-head">
-        <p class="eyebrow" aria-hidden="true"><i></i>Transcript<i></i></p>
         <h2 id="t-title">메시지 전문</h2>
         <label class="follow" id="follow-wrap" hidden><input type="checkbox" id="follow" checked> 재생 중인 메시지로 화면 따라가기</label>
       </div>
