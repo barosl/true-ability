@@ -937,7 +937,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
         nowText.innerHTML = '';
         if (name) {
           const b = document.createElement('b'); b.textContent = name;
-          nowText.append('지금 ', b);
+          nowText.append('현재 재생 중: ', b);
           miniNow.innerHTML = ''; miniNow.append(b.cloneNode(true));
         } else {
           nowText.textContent = started ? '음성 롤링페이퍼' : '';
