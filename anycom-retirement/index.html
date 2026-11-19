@@ -136,6 +136,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
 .now{font-size:15px;color:var(--lav);margin-bottom:10px;min-height:1.6em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .now b{color:#fff;font-weight:700;}
 .eq{display:inline-flex;align-items:flex-end;gap:2px;height:12px;margin-right:8px;vertical-align:-1px;}
+.now:has(#now-text:empty) .eq{visibility:hidden;}
 .eq i{width:3px;height:4px;border-radius:2px;background:var(--orange);}
 .is-playing .eq i{animation:eq 1s ease-in-out infinite;}
 .eq i:nth-child(2){animation-delay:.2s!important;}.eq i:nth-child(3){animation-delay:.4s!important;}
@@ -369,7 +370,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
               </button>
             </div>
             <div class="pl-info">
-              <p class="now" id="now" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span><span id="now-text">재생 버튼을 눌러 주세요</span></p>
+              <p class="now" id="now" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span><span id="now-text"></span></p>
               <div class="wave" id="wave">
                 <svg class="base" aria-hidden="true" focusable="false"></svg>
                 <div class="played" aria-hidden="true"><svg focusable="false"></svg></div>
@@ -848,7 +849,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
           nowText.append('지금 ', b);
           miniNow.innerHTML = ''; miniNow.append(b.cloneNode(true));
         } else {
-          nowText.textContent = started ? '음성 롤링페이퍼' : '재생 버튼을 눌러 주세요';
+          nowText.textContent = started ? '음성 롤링페이퍼' : '';
           miniNow.textContent = '음성 롤링페이퍼';
         }
         if (note && !audio.paused) maybeFollow(note, prev);
