@@ -898,7 +898,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
   let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(drawWave, 150); });
 
   /* ---------- UI sync ---------- */
-  let activeSeg = -1, activeNote = null, lastUserScroll = 0;
+  let activeSeg = -1, activeNote = null, lastUserScroll = 0, autoScrollUntil = 0;
   /* Browsers can only jump around in a media file when the server honours HTTP Range requests.
      GitHub Pages does, GitLab Pages does not. On such servers the whole file is fetched once into
      a blob: URL (always seekable) and seeks wait until it is ready. */
@@ -958,8 +958,14 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
     const following = prev ? inView(prev, 0.2) : $('#transcript').getBoundingClientRect().top < window.innerHeight * 0.5;
     if (!following || inView(note, 0.9)) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    autoScrollUntil = Date.now() + 1500;   // our own smooth scroll; cleared early on scrollend where supported
     note.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
   }
+  // Any scroll we did not start is the user's: scrollbar drag, keys pressed on any element,
+  // a screen reader moving the page, as well as wheel and touch.
+  window.addEventListener('scroll', () => { if (Date.now() > autoScrollUntil) lastUserScroll = Date.now(); }, { passive: true });
+  window.addEventListener('scrollend', () => { autoScrollUntil = 0; });
+  // Wheel and touch also count while our own scroll is still running.
   ['wheel', 'touchmove'].forEach((ev) => window.addEventListener(ev, () => { lastUserScroll = Date.now(); }, { passive: true }));
   window.addEventListener('keydown', (e) => {
     if (['PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End', ' '].includes(e.key) && e.target === body) lastUserScroll = Date.now();
