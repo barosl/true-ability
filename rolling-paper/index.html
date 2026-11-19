@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>김병호 프로님 음성 롤링페이퍼</title>
+<meta name="description" content="43년 동안 함께 걸어온 시간에 감사하며, True Ability 동료들이 목소리로 전하는 인사입니다. 바로 듣거나 내려받거나 글로 읽을 수 있습니다.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0B1440">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="김병호 프로님 음성 롤링페이퍼">
+<meta property="og:description" content="True Ability 동료들의 목소리 · 11분 20초">
+<meta property="og:url" content="https://barosl.github.io/true-ability/rolling-paper/">
+<meta property="og:image" content="https://barosl.github.io/true-ability/rolling-paper/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<link rel="preload" href="assets/pretendard-900.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Pretendard';font-weight:400;font-display:swap;src:url(assets/pretendard-400.woff2) format('woff2');}
+@font-face{font-family:'Pretendard';font-weight:700;font-display:swap;src:url(assets/pretendard-700.woff2) format('woff2');}
+@font-face{font-family:'Pretendard';font-weight:900;font-display:swap;src:url(assets/pretendard-900.woff2) format('woff2');}
+
+:root{
+  /* brand (True Ability) */
+  --navy0:#05060E;--navy1:#0A0E1E;--navy2:#0B1440;
+  --indigo:#2033A5;--blue:#2066E2;--blueL:#4C8CFF;
+  --teal:#33CCCC;--orange:#FF912E;--amber:#FFB62E;
+  --lav:#C2C7E6;--lav2:#9AA3CC;
+  --on-orange:#1A1004;
+  /* paper (transcript) */
+  --paper:#F5F0E6;--paper-dot:rgba(30,34,51,.09);
+  --note:#FFFDF8;--note-edge:rgba(30,34,51,.10);
+  --ink:#1D2133;--muted:#555B70;
+  --hl:rgba(255,182,46,.45);
+  --focus-paper:#1D4ED8;
+  --shadow:0 1px 2px rgba(30,34,51,.06),0 10px 28px rgba(30,34,51,.10);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0B0F20;--paper-dot:rgba(194,199,230,.07);
+    --note:#151A2F;--note-edge:rgba(194,199,230,.12);
+    --ink:#E7EAF5;--muted:#A9B0CC;
+    --hl:rgba(255,145,46,.34);
+    --focus-paper:#FFB62E;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0B0F20;--paper-dot:rgba(194,199,230,.07);
+  --note:#151A2F;--note-edge:rgba(194,199,230,.12);
+  --ink:#E7EAF5;--muted:#A9B0CC;
+  --hl:rgba(255,145,46,.34);
+  --focus-paper:#FFB62E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+[hidden]{display:none!important;}
+html{background:var(--navy1);-webkit-text-size-adjust:100%;}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  font-size:18px;line-height:1.6;color:var(--ink);background:var(--paper);
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden;}
+img,svg{display:block;}
+button,select,input{font:inherit;color:inherit;}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+.wrap{width:100%;max-width:1040px;margin:0 auto;padding:0 16px;}
+:focus-visible{outline:3px solid var(--amber);outline-offset:3px;}
+.paper :focus-visible{outline-color:var(--focus-paper);}
+
+/* ============ HERO ============ */
+.hero{position:relative;isolation:isolate;overflow:hidden;color:#EAEDF7;
+  background:
+    radial-gradient(110% 80% at 85% 0%, rgba(32,102,226,.55), transparent 60%),
+    radial-gradient(90% 90% at 0% 100%, rgba(255,145,46,.30), transparent 55%),
+    linear-gradient(165deg,#0B1440 0%,#0A1030 50%,#070A18 100%);
+  padding:28px 0 56px;}
+.deco{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.45;}
+.blob.o{width:520px;height:520px;left:-180px;bottom:-220px;background:radial-gradient(circle,#FF912E,transparent 70%);animation:drift1 18s ease-in-out infinite;}
+.blob.b{width:560px;height:560px;right:-180px;top:-200px;background:radial-gradient(circle,#2066E2,transparent 70%);animation:drift2 21s ease-in-out infinite;}
+.blob.t{width:300px;height:300px;right:22%;bottom:-140px;background:radial-gradient(circle,#33CCCC,transparent 70%);opacity:.25;animation:drift1 24s ease-in-out infinite reverse;}
+@keyframes drift1{50%{transform:translate(50px,-36px) scale(1.1);}}
+@keyframes drift2{50%{transform:translate(-44px,40px) scale(1.08);}}
+.lines{position:absolute;inset:auto 0 0 0;height:70%;opacity:.45;}
+.lines svg{position:absolute;width:180%;height:100%;left:-40%;}
+.lines path{fill:none;stroke-linecap:round;}
+.lines .l1{stroke:rgba(120,170,255,.55);stroke-width:2;animation:flow 10s linear infinite;}
+.lines .l2{stroke:rgba(51,204,204,.4);stroke-width:1.6;animation:flow 14s linear infinite reverse;}
+.lines .l3{stroke:rgba(255,145,46,.38);stroke-width:1.6;animation:flow 18s linear infinite;}
+@keyframes flow{to{stroke-dashoffset:-2400;}}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:44px;}
+.logo{height:44px;width:auto;}
+.date-chip{font-size:14px;font-weight:700;letter-spacing:.08em;color:#CDD6F5;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.05);border-radius:999px;padding:6px 14px;white-space:nowrap;}
+
+.intro{max-width:760px;}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.22em;color:var(--amber);text-transform:uppercase;margin-bottom:14px;}
+.eyebrow i{width:26px;height:2px;border-radius:2px;background:var(--orange);display:inline-block;}
+h1{font-weight:900;letter-spacing:-.02em;line-height:1.12;}
+h1 .a{display:block;font-size:clamp(22px,4.2vw,34px);font-weight:700;color:#EAEDF7;margin-bottom:6px;}
+h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
+  background:linear-gradient(92deg,#FF912E,#FFC65A);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.lede{margin-top:18px;font-size:clamp(17px,2.2vw,20px);line-height:1.7;color:var(--lav);max-width:640px;}
+
+/* ---- player card ---- */
+.player{margin-top:36px;border-radius:28px;padding:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.035));
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 20px 60px rgba(0,0,0,.35);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.player audio{width:100%;}
+.pl-main{display:flex;align-items:center;gap:24px;}
+.play-wrap{position:relative;flex:0 0 auto;width:108px;height:108px;display:grid;place-items:center;}
+.ring{position:absolute;inset:0;margin:auto;width:108px;height:108px;border-radius:50%;border:2px solid rgba(76,140,255,.55);opacity:0;pointer-events:none;}
+.is-playing .ring{animation:ripple 3s ease-out infinite;}
+.is-playing .ring.r2{animation-delay:1s;border-color:rgba(51,204,204,.55);}
+.is-playing .ring.r3{animation-delay:2s;border-color:rgba(255,145,46,.55);}
+@keyframes ripple{0%{transform:scale(.85);opacity:.9;}100%{transform:scale(1.9);opacity:0;}}
+.play{position:relative;width:108px;height:108px;border-radius:50%;border:0;cursor:pointer;
+  background:linear-gradient(150deg,#FFB24F,#FF8A1F);color:var(--on-orange);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  box-shadow:0 10px 30px rgba(255,145,46,.45),inset 0 -3px 0 rgba(0,0,0,.12);
+  transition:transform .2s cubic-bezier(.22,.9,.3,1),box-shadow .2s;}
+.play:hover{transform:scale(1.04);box-shadow:0 14px 38px rgba(255,145,46,.6),inset 0 -3px 0 rgba(0,0,0,.12);}
+.play:active{transform:scale(.97);}
+.play svg{width:38px;height:38px;fill:currentColor;}
+.play .i-pause{display:none;}
+.is-playing .play .i-play{display:none;}
+.is-playing .play .i-pause{display:block;}
+.play-label{font-size:15px;font-weight:900;letter-spacing:.02em;line-height:1.2;}
+
+.pl-info{flex:1 1 auto;min-width:0;}
+.now{font-size:15px;color:var(--lav);margin-bottom:10px;min-height:1.6em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.now b{color:#fff;font-weight:700;}
+.eq{display:inline-flex;align-items:flex-end;gap:2px;height:12px;margin-right:8px;vertical-align:-1px;}
+.eq i{width:3px;height:4px;border-radius:2px;background:var(--orange);}
+.is-playing .eq i{animation:eq 1s ease-in-out infinite;}
+.eq i:nth-child(2){animation-delay:.2s!important;}.eq i:nth-child(3){animation-delay:.4s!important;}
+@keyframes eq{0%,100%{height:4px;}50%{height:12px;}}
+
+.wave{position:relative;height:64px;border-radius:12px;}
+.wave svg{position:absolute;inset:0;width:100%;height:100%;}
+.wave .base line{stroke:rgba(194,199,230,.32);}
+.wave .played{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--p,0%)) 0 0);}
+.wave .played line{stroke:url(#wgrad);}
+.wave .head{position:absolute;top:-4px;bottom:-4px;left:var(--p,0%);width:2px;margin-left:-1px;border-radius:2px;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.7);}
+.wave .marks{position:absolute;left:0;right:0;bottom:-12px;height:6px;}
+.wave .marks i{position:absolute;top:0;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--accent,#fff);opacity:.85;}
+.seek{position:absolute;inset:-6px 0;width:100%;height:calc(100% + 12px);opacity:0;cursor:pointer;-webkit-appearance:none;appearance:none;margin:0;background:transparent;}
+.seek::-webkit-slider-thumb{-webkit-appearance:none;width:2px;height:64px;}
+.seek::-moz-range-thumb{width:2px;height:64px;border:0;}
+.wave:has(.seek:focus-visible){outline:3px solid var(--amber);outline-offset:6px;}
+.times{display:flex;justify-content:space-between;margin-top:18px;font-size:14px;font-weight:700;color:var(--lav2);font-variant-numeric:tabular-nums;}
+
+.pl-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:#EAEDF7;font-size:16px;font-weight:700;
+  cursor:pointer;text-decoration:none;transition:background .2s,border-color .2s,transform .2s;}
+.btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,182,46,.6);}
+.btn svg{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.btn.resume{border-color:rgba(51,204,204,.55);background:rgba(51,204,204,.12);}
+.rate{display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-size:15px;font-weight:700;color:var(--lav);}
+.rate select{min-height:48px;padding:8px 36px 8px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.22);font-weight:700;font-size:16px;
+  background:rgba(255,255,255,.06) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C2C7E6' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/16px;
+  color:#EAEDF7;-webkit-appearance:none;appearance:none;cursor:pointer;}
+.rate select option{color:#111;background:#fff;}
+
+.dl-row{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin-top:16px;}
+.dl{display:flex;align-items:center;gap:14px;min-height:64px;padding:12px 20px;border-radius:18px;text-decoration:none;font-weight:700;font-size:17px;
+  transition:transform .2s,box-shadow .2s,background .2s;}
+.dl svg{width:26px;height:26px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.dl small{display:block;font-size:13px;font-weight:700;opacity:.8;margin-top:1px;}
+.dl.primary{background:linear-gradient(120deg,#FFC65A,#FF9A3C);color:var(--on-orange);box-shadow:0 8px 24px rgba(255,145,46,.3);}
+.dl.primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,145,46,.45);}
+.dl.secondary{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:#EAEDF7;}
+.dl.secondary:hover{background:rgba(255,255,255,.12);border-color:rgba(255,182,46,.6);}
+.err{margin-top:14px;padding:14px 16px;border-radius:14px;background:rgba(255,90,90,.14);border:1px solid rgba(255,120,120,.5);color:#FFE2E2;font-weight:700;}
+
+.facts{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px;}
+.facts li{border-radius:18px;padding:16px 18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);}
+.facts b{display:block;font-size:clamp(24px,3.4vw,32px);font-weight:900;letter-spacing:-.02em;color:#fff;line-height:1.15;}
+.facts span{display:block;font-size:14px;color:var(--lav2);font-weight:700;margin-top:4px;}
+.facts li:nth-child(1) b{color:var(--amber);}
+.facts li:nth-child(3) b{color:var(--teal);}
+
+/* ============ PAPER / TRANSCRIPT ============ */
+.paper{position:relative;padding:64px 0 88px;
+  background-color:var(--paper);
+  background-image:radial-gradient(var(--paper-dot) 1.2px, transparent 1.3px);
+  background-size:22px 22px;}
+.paper::before{content:"";position:absolute;left:0;right:0;top:-1px;height:28px;
+  background:linear-gradient(180deg,rgba(7,10,24,.18),transparent);pointer-events:none;}
+.paper-head{max-width:720px;margin:0 auto 36px;text-align:center;}
+.paper-head .eyebrow{justify-content:center;color:#C46A12;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .paper-head .eyebrow{color:var(--amber);}}
+:root[data-theme="dark"] .paper-head .eyebrow{color:var(--amber);}
+.paper-head h2{font-size:clamp(30px,5vw,42px);font-weight:900;letter-spacing:-.02em;line-height:1.2;}
+.paper-head p{margin-top:12px;color:var(--muted);font-size:17px;line-height:1.7;}
+.follow{display:inline-flex;align-items:center;gap:10px;margin-top:18px;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--note-edge);background:var(--note);}
+.follow input{width:20px;height:20px;accent-color:#FF912E;cursor:pointer;}
+
+.notes{list-style:none;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:26px;}
+.note{--accent:var(--orange);--on-accent:var(--on-orange);--tilt:0deg;--shift:0px;
+  position:relative;transform:translateX(var(--shift)) rotate(var(--tilt));
+  transition:transform .45s cubic-bezier(.22,.9,.3,1),box-shadow .45s;
+  scroll-margin:120px 0;}
+.note:nth-child(4n+1){--tilt:-.7deg;--shift:-10px;}
+.note:nth-child(4n+2){--tilt:.6deg;--shift:12px;}
+.note:nth-child(4n+3){--tilt:-.4deg;--shift:6px;}
+.note:nth-child(4n+4){--tilt:.8deg;--shift:-8px;}
+.note.c-orange{--accent:#FF912E;--on-accent:#1A1004;}
+.note.c-blue{--accent:#2066E2;--on-accent:#fff;}
+.note.c-teal{--accent:#2BBFBF;--on-accent:#04201F;}
+.note.c-amber{--accent:#FFB62E;--on-accent:#1A1004;}
+.note.c-indigo{--accent:#3346C2;--on-accent:#fff;}
+.card{position:relative;border-radius:20px;padding:26px 26px 24px;background:var(--note);border:1px solid var(--note-edge);box-shadow:var(--shadow);
+  transition:box-shadow .45s,border-color .45s;}
+.card::before{content:"";position:absolute;top:-11px;left:50%;width:96px;height:24px;margin-left:-48px;border-radius:3px;
+  background:var(--accent);opacity:.55;transform:rotate(-2deg);}
+.note:nth-child(even) .card::before{transform:rotate(2.5deg);left:38%;}
+.note-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.avatar{flex:0 0 auto;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:16px;letter-spacing:-.02em;
+  background:var(--accent);color:var(--on-accent);box-shadow:0 4px 12px rgba(0,0,0,.12);}
+.avatar-ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;}
+.who{flex:1 1 200px;min-width:0;}
+.who h3{font-size:21px;font-weight:900;letter-spacing:-.01em;line-height:1.3;}
+.who .role{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-top:2px;}
+.jump{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border-radius:12px;cursor:pointer;
+  border:1px solid var(--note-edge);background:transparent;color:var(--ink);font-size:15px;font-weight:700;white-space:nowrap;
+  transition:background .2s,border-color .2s;}
+.jump:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);}
+.jump svg{width:16px;height:16px;fill:currentColor;}
+.note-body{margin-top:16px;font-size:18px;line-height:1.85;}
+.note-body p+p{margin-top:.6em;}
+.seg{border-radius:4px;transition:background-color .3s,box-shadow .3s;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+.seg:hover{background:color-mix(in srgb,var(--accent) 12%,transparent);}
+.seg.on{background:var(--hl);box-shadow:0 0 0 2px var(--hl);}
+.badge{display:none;align-items:center;gap:6px;position:absolute;top:-14px;right:20px;padding:4px 10px 4px 8px;border-radius:999px;
+  background:var(--accent);color:var(--on-accent);font-size:13px;font-weight:900;box-shadow:0 4px 12px rgba(0,0,0,.18);}
+.badge .eq{margin-right:0;height:11px;}
+.badge .eq i{background:currentColor;}
+.note.on{--tilt:0deg;--shift:0px;}
+.note.on .card{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent),var(--shadow);}
+.note.on .badge{display:inline-flex;}
+
+/* plaque */
+.note.plaque .card{background:
+  linear-gradient(var(--note),var(--note)) padding-box,
+  linear-gradient(135deg,#E9B44C,#FFE6A8 40%,#C98F2B 70%,#F3CF7A) border-box;
+  border:3px solid transparent;text-align:center;padding:34px 28px 30px;}
+.note.plaque .card::before{display:none;}
+.note.plaque .note-head{justify-content:center;flex-direction:column;gap:10px;}
+.note.plaque .who{flex:none;}
+.plaque-mark{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#F3CF7A,#C98F2B);color:#3A2600;}
+.plaque-mark svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.note.plaque .note-body{font-size:19px;line-height:1.95;}
+.note.plaque .sign{margin-top:14px;font-weight:700;color:var(--muted);font-size:16px;}
+
+/* ============ FOOTER ============ */
+.foot{background:var(--navy1);color:var(--lav2);padding:40px 0 calc(40px + env(safe-area-inset-bottom));text-align:center;font-size:15px;}
+.foot img{height:34px;width:auto;margin:0 auto 14px;opacity:.9;}
+.foot b{color:#EAEDF7;}
+
+/* ============ MINI PLAYER ============ */
+.mini{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));z-index:20;transform:translate(-50%,140%);
+  width:min(560px,calc(100% - 24px));display:flex;align-items:center;gap:14px;padding:10px 16px 10px 10px;border-radius:999px;
+  background:rgba(10,14,30,.92);color:#EAEDF7;border:1px solid rgba(255,255,255,.14);box-shadow:0 14px 40px rgba(0,0,0,.4);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);visibility:hidden;
+  transition:transform .35s cubic-bezier(.22,.9,.3,1),visibility 0s .35s;}
+.mini.show{transform:translate(-50%,0);visibility:visible;transition:transform .35s cubic-bezier(.22,.9,.3,1),visibility 0s;}
+.mini-play{flex:0 0 auto;width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;
+  background:linear-gradient(150deg,#FFB24F,#FF8A1F);color:var(--on-orange);}
+.mini-play svg{width:20px;height:20px;fill:currentColor;}
+.mini-play .i-pause{display:none;}
+.is-playing .mini-play .i-play{display:none;}
+.is-playing .mini-play .i-pause{display:block;}
+.mini-info{flex:1 1 auto;min-width:0;}
+.mini-now{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mini-now b{font-weight:700;}
+.mini-bar{margin-top:6px;height:4px;border-radius:4px;background:rgba(194,199,230,.25);overflow:hidden;}
+.mini-bar i{display:block;height:100%;width:var(--p,0%);background:linear-gradient(90deg,#FF912E,#FFC65A);}
+.mini-time{flex:0 0 auto;font-size:13px;font-weight:700;color:var(--lav2);font-variant-numeric:tabular-nums;}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:760px){
+  .facts{grid-template-columns:repeat(2,1fr);}
+  .dl-row{grid-template-columns:1fr;}
+  .rate{margin-left:0;}
+}
+@media (max-width:560px){
+  body{font-size:17px;}
+  .hero{padding-top:20px;}
+  .topbar{margin-bottom:32px;}
+  .logo{height:34px;}
+  .player{padding:18px;border-radius:24px;}
+  .pl-main{flex-direction:column;align-items:stretch;gap:18px;}
+  .play-wrap{margin:0 auto;}
+  .now{text-align:center;}
+  .pl-ctrl .btn{flex:1 1 calc(50% - 5px);padding:10px 12px;}
+  .pl-ctrl .btn.resume{flex-basis:100%;}
+  .rate{flex:1 1 100%;justify-content:space-between;}
+  .rate select{flex:1;max-width:60%;}
+  .card{padding:22px 18px 20px;}
+  .note{--shift:0px!important;}
+  .note-body{font-size:17px;}
+  .jump{width:100%;justify-content:center;}
+  .mini-time{display:none;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+}
+@media (forced-colors:active){
+  .play,.mini-play,.dl,.btn,.jump,.card{border:2px solid ButtonText;}
+  .seg.on{outline:2px solid Highlight;}
+  .wave .head{background:Highlight;}
+}
+@media print{
+  .hero{background:#fff;color:#000;padding:0 0 12px;}
+  .deco,.player,.facts,.mini,.jump,.follow,.badge{display:none!important;}
+  h1 .b{color:#000;background:none;}
+  .lede{color:#333;}
+  .paper{background:#fff;padding:12px 0;}
+  .note{transform:none!important;break-inside:avoid;}
+  .card{box-shadow:none;}
+  .card::before{display:none;}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="hero">
+    <div class="deco" aria-hidden="true">
+      <div class="blob o"></div><div class="blob b"></div><div class="blob t"></div>
+      <div class="lines">
+        <svg viewBox="0 0 1200 400" preserveAspectRatio="none">
+          <path class="l1" d="M-100,230 C150,160 350,300 600,230 S1050,160 1300,240" stroke-dasharray="10 14"/>
+          <path class="l2" d="M-100,300 C200,240 380,380 640,300 S1080,240 1320,320" stroke-dasharray="6 16"/>
+          <path class="l3" d="M-100,360 C180,320 400,430 660,360 S1100,310 1320,380" stroke-dasharray="4 18"/>
+        </svg>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="topbar" aria-hidden="true">
+        <img class="logo" src="assets/true-ability-logo.png" alt="" width="960" height="238">
+        <span class="date-chip">2026. 11. 30.</span>
+      </div>
+
+      <div class="intro">
+        <p class="eyebrow" aria-hidden="true"><i></i>Voice Rolling Paper</p>
+        <h1><span class="a">김병호 프로님께 드리는</span> <span class="b">음성 롤링페이퍼</span></h1>
+        <p class="lede">43년 동안 함께 걸어온 시간에 감사하며, True Ability 동료들이 목소리로 인사를 전합니다. 아래 재생 버튼을 누르면 바로 들을 수 있고, 파일로 내려받거나 글로 읽을 수도 있습니다.</p>
+      </div>
+
+      <section class="player" aria-label="음성 듣기">
+        <audio id="audio" src="rolling-paper.mp3" preload="metadata" controls>
+          이 브라우저에서는 음성을 바로 재생할 수 없습니다. 아래 링크로 내려받아 들어 주세요.
+        </audio>
+
+        <div id="pl" hidden>
+          <div class="pl-main">
+            <div class="play-wrap">
+              <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span><span class="ring r3" aria-hidden="true"></span>
+              <button id="play" class="play" type="button">
+                <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg>
+                <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4.5" width="4.2" height="15" rx="1.3"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.3"/></svg>
+                <span class="play-label" id="play-label">재생</span>
+              </button>
+            </div>
+            <div class="pl-info">
+              <p class="now" id="now" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span><span id="now-text">재생 버튼을 눌러 주세요</span></p>
+              <div class="wave" id="wave">
+                <svg class="base" aria-hidden="true" focusable="false"></svg>
+                <div class="played" aria-hidden="true"><svg focusable="false"></svg></div>
+                <span class="head" aria-hidden="true"></span>
+                <div class="marks" aria-hidden="true"></div>
+                <input class="seek" id="seek" type="range" min="0" max="680" step="5" value="0" aria-label="재생 위치" aria-valuetext="0초 / 전체 11분 20초">
+              </div>
+              <div class="times" aria-hidden="true"><span id="cur">0:00</span><span id="dur">11:20</span></div>
+            </div>
+          </div>
+          <div class="pl-ctrl">
+            <button id="resume" class="btn resume" type="button" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+              <span id="resume-label">지난번 들은 곳부터 이어 듣기</span>
+            </button>
+            <button id="back" class="btn" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17 6 12l5-5"/><path d="M18 17l-5-5 5-5"/></svg>10초 뒤로
+            </button>
+            <button id="fwd" class="btn" type="button">
+              10초 앞으로<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 17 5-5-5-5"/><path d="m6 17 5-5-5-5"/></svg>
+            </button>
+            <label class="rate">재생 속도
+              <select id="rate">
+                <option value="0.75">0.75배</option>
+                <option value="1" selected>1배 (보통)</option>
+                <option value="1.25">1.25배</option>
+                <option value="1.5">1.5배</option>
+                <option value="2">2배</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <p class="err" id="err" role="alert" hidden></p>
+
+        <div class="dl-row">
+          <a class="dl primary" href="rolling-paper.mp3" download="김병호 프로님 음성 롤링페이퍼.mp3">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
+            <span>음성 파일 내려받기<small>MP3 · 16MB · 11분 20초</small></span>
+          </a>
+          <a class="dl secondary" href="transcript.txt" download="김병호 프로님 음성 롤링페이퍼 (글).txt">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
+            <span>글로 옮긴 파일 내려받기<small>TXT · 메시지 전문</small></span>
+          </a>
+        </div>
+      </section>
+
+      <ul class="facts">
+        <li><b>1983</b><span>첫 걸음</span></li>
+        <li><b>43년</b><span>삼성전자와 함께한 시간</span></li>
+        <li><b>16명</b><span>동료들의 목소리</span></li>
+        <li><b>11분 20초</b><span>마음을 담은 시간</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="paper" id="transcript" aria-labelledby="t-title">
+    <div class="wrap">
+      <div class="paper-head">
+        <p class="eyebrow" aria-hidden="true"><i></i>Transcript<i></i></p>
+        <h2 id="t-title">메시지 전문</h2>
+        <p>목소리로 전한 메시지를 글로 옮겼습니다. 메시지마다 있는 ‘듣기’ 버튼을 누르면 그 부분부터 재생됩니다.</p>
+        <label class="follow" id="follow-wrap" hidden><input type="checkbox" id="follow" checked> 재생 중인 메시지로 화면 따라가기</label>
+      </div>
+      <ol class="notes">
+        <li class="note c-blue" id="m1" data-start="0.00" data-name="여는 인사">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar avatar-ic" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" class="ic"><path d="M4 10v4"/><path d="M8 7v10"/><path d="M12 4v16"/><path d="M16 7v10"/><path d="M20 10v4"/></svg></span>
+              <div class="who"><h3 id="m1-h">여는 인사 <span class="role">True Ability 이준 · VD사업부</span></h3></div>
+              <button class="jump" type="button" data-t="0.00"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">여는 인사, </span>처음부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="1.20">안녕하세요.</span> <span class="seg" data-s="2.90">병호 프로님, True Ability 이준입니다.</span> <span class="seg" data-s="5.34">프로님의 새로운 시작을 응원하는 마음으로 True Ability 멤버들과 함께 음성 롤링페이퍼를 준비했습니다.</span> <span class="seg" data-s="12.32">먼저 의윤 프로님과 감사패에 적힌 글을 읽겠습니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-amber plaque" id="m2" data-start="16.32" data-name="감사패 문구">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="plaque-mark" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 13.8-1.5 7.2 5-2.6 5 2.6-1.5-7.2"/></svg></span>
+              <div class="who"><h3 id="m2-h">감사패 문구 <span class="role">낭독: True Ability 회장 이의윤</span></h3></div>
+              <button class="jump" type="button" data-t="16.32"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">감사패 문구, </span>16초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="16.32">김병호 프로님, 1983년 첫걸음부터 오늘까지 삼성전자와 함께 걸어오신 43년.</span> <span class="seg" data-s="24.02">사람과 기술을 잇는 따뜻한 마음으로 모두를 위한 길을 열어 주셨습니다.</span> <span class="seg" data-s="27.95">함께한 시간을 소중히 기억하며 프로님의 새로운 시작을 진심으로 응원합니다.</span> <span class="seg" data-s="34.85">2026년 11월 30일, True Ability 일동</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-orange" id="m3" data-start="40.20" data-name="김영준">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">영준</span>
+              <div class="who"><h3 id="m3-h">김영준 <span class="role">MX사업부 중남미 담당</span></h3></div>
+              <button class="jump" type="button" data-t="40.20"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">김영준 님 메시지, </span>40초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="40.20">병호 선배님, 안녕하세요.</span> <span class="seg" data-s="42.48">저는 MX사업부 중남미 담당 김영준입니다.</span> <span class="seg" data-s="46.16">지난 43년간 삼성전자 성장의 역사와 함께하시느라 고생 많으셨고,</span> <span class="seg" data-s="51.10">퇴직 후에도 계획하고 소망하시는 모든 일들이 잘 풀리고, 늘 건강과 행복 충만하시길 기원드립니다.</span> <span class="seg" data-s="58.84">감사합니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-blue" id="m4" data-start="59.52" data-name="김예지">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">예지</span>
+              <div class="who"><h3 id="m4-h">김예지 <span class="role">금오공대 전자공학부 후배 · True Ability</span></h3></div>
+              <button class="jump" type="button" data-t="59.52"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">김예지 님 메시지, </span>59초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="59.52">김병호 프로님, 안녕하세요.</span> <span class="seg" data-s="64.37">금오공대 전자공학부 후배이자</span> <span class="seg" data-s="67.05">True Ability 활동을 함께했던 김예지입니다.</span> <span class="seg" data-s="70.53">오랜 시간 수고 많으셨고,</span> <span class="seg" data-s="72.87">지금까지 걸어오신 걸음걸음 기억하며</span> <span class="seg" data-s="75.81">반듯하게 따라가는 후배 되겠습니다.</span> <span class="seg" data-s="78.13">수고 많으셨습니다. 감사합니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-teal" id="m5" data-start="80.51" data-name="김준영">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">준영</span>
+              <div class="who"><h3 id="m5-h">김준영 <span class="role">가전 접근성 업무</span></h3></div>
+              <button class="jump" type="button" data-t="80.51"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">김준영 님 메시지, </span>1분 20초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="80.51">김병호 프로님, 안녕하세요.</span> <span class="seg" data-s="85.09">저 김준영입니다.</span> <span class="seg" data-s="86.57">가전 접근성 업무 보면서</span> <span class="seg" data-s="89.41">항상 물어볼 게 있다거나</span> <span class="seg" data-s="91.51">의견이 궁금하다거나 할 때 항상 여쭤보곤 했었는데,</span> <span class="seg" data-s="95.07">떠나신다니까 아쉽고, 또 업무 외적으로도 이제 막 좀 더 알게 될 수 있었던 것 같은데</span> <span class="seg" data-s="100.95">그러지 못해 좀 아쉽습니다.</span> <span class="seg" data-s="102.65">그동안 고생 많이 하셨고, 항상 건강하시길 바라겠습니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-amber" id="m6" data-start="106.75" data-name="김현수">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">현수</span>
+              <div class="who"><h3 id="m6-h">김현수</h3></div>
+              <button class="jump" type="button" data-t="106.75"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">김현수 님 메시지, </span>1분 46초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="106.75">안녕하세요, 저 김현수입니다.</span> <span class="seg" data-s="111.12">아, 벌써 시간이 이렇게 되었네요, 프로님.</span> <span class="seg" data-s="114.65">그동안 정말 큰 어려움이 있으셨는데,</span> <span class="seg" data-s="118.07">그 속에서도 이렇게 본이 되는 모습을 보여 주셔서 정말 감사드리고,</span> <span class="seg" data-s="123.87">앞으로도 마음 깊이 간직하겠습니다.</span> <span class="seg" data-s="127.99">고맙습니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-indigo" id="m7" data-start="131.72" data-name="노은정">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">은정</span>
+              <div class="who"><h3 id="m7-h">노은정 <span class="role">MX사업부 AI플랫폼팀</span></h3></div>
+              <button class="jump" type="button" data-t="131.72"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">노은정 님 메시지, </span>2분 11초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="131.72">안녕하세요, 김병호 프로님.</span> <span class="seg" data-s="133.78">저는 MX사업부 AI플랫폼팀에서 근무하는 노은정이라고 합니다.</span></p>
+          <p><span class="seg" data-s="138.80">먼저 40년이 넘는 긴 여정을 마치고 새로운 출발을 앞두신 프로님께 축하와 감사의 인사를 전합니다.</span> <span class="seg" data-s="146.84">비록 직접 인사를 드릴 기회는 없었지만 True Ability ERG를 통해 프로님께서 걸어오신 길과 이야기를 접할 수 있었습니다.</span></p>
+          <p><span class="seg" data-s="156.98">살다 보면 예상치 못한 어려움으로 삶의 방향이 달라지기도 하는데, 프로님께서는 그 변화 속에서도 새로운 길을 만들어 오셨다는 점이 참 인상 깊었습니다.</span> <span class="seg" data-s="168.30">그리고 그 길에서 쌓아 오신 경험과 지혜를 또 다른 누군가의 가능성을 넓히는 데 기꺼이 나누어 주셨다는 것이 더욱 뜻깊고 감동적으로 느껴졌습니다.</span></p>
+          <p><span class="seg" data-s="181.34">프로님께서 오랜 시간 전해 주신 배움과 따뜻한 영향력은 앞으로도 많은 후배들의 삶에 남아 있을 거라 생각합니다.</span> <span class="seg" data-s="189.72">이제 시작되는 새로운 시간에는 그동안 다른 분들을 위해 나누어 주셨던 만큼 프로님 자신을 위한 기쁨과 설렘도 가득하시길 바랍니다.</span> <span class="seg" data-s="201.34">앞으로 펼쳐질 새로운 날들을 진심으로 응원하겠습니다.</span></p>
+          <p><span class="seg" data-s="206.40">김병호 프로님, 그동안 정말 감사했습니다.</span> <span class="seg" data-s="210.04">그리고 새로운 출발을 축하드립니다.</span> <span class="seg" data-s="213.76">노은정 드림</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-orange" id="m8" data-start="217.73" data-name="백인호">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">인호</span>
+              <div class="who"><h3 id="m8-h">백인호</h3></div>
+              <button class="jump" type="button" data-t="217.73"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">백인호 님 메시지, </span>3분 37초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="217.73">김병호 프로님, 백인호입니다.</span> <span class="seg" data-s="220.57">저 역시 2012년도에 처음 뵙고, 그다음에 지금까지 함께하면서 저희 회사 생활 동안 가장 보람된 시간을 보냈던 것 같습니다.</span> <span class="seg" data-s="239.79">김 프로님 덕분에 우리 회사 접근성도 좋아지고, 그다음에 또 장애인분들의 삶도 그만큼 좋아지지 않았나 생각이 듭니다.</span> <span class="seg" data-s="249.95">항상 건강하시고요.</span> <span class="seg" data-s="252.59">또 지속해서 계속 뵐 수 있기를 바라겠습니다.</span> <span class="seg" data-s="256.81">감사합니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-blue" id="m9" data-start="258.00" data-name="(확인 필요)">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">요)</span>
+              <div class="who"><h3 id="m9-h">(확인 필요)</h3></div>
+              <button class="jump" type="button" data-t="258.00"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">(확인 필요) 님 메시지, </span>4분 18초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="281.87">접근성에 계속 관심 가지고 비슷한 활동 이어갈 수 있도록 진행할 거고요.</span> <span class="seg" data-s="289.49">그 중에 꾸준히 많은 도움 요청드리도록 하겠습니다.</span> <span class="seg" data-s="296.94">너무나도 수고 많으셨고, 정년퇴직 축하드리고</span> <span class="seg" data-s="301.31">앞으로 더 멋진 두 번째 인생 사시기를 기원하겠습니다.</span> <span class="seg" data-s="307.42">감사합니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-teal" id="m10" data-start="309.59" data-name="이바로슬">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">로슬</span>
+              <div class="who"><h3 id="m10-h">이바로슬</h3></div>
+              <button class="jump" type="button" data-t="309.59"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">이바로슬 님 메시지, </span>5분 9초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="309.59">안녕하세요, 김병호님.</span> <span class="seg" data-s="311.31">저는 이바로슬이라고 합니다.</span> <span class="seg" data-s="313.47">사실 저는 김병호님에 대해 잘 모릅니다.</span> <span class="seg" data-s="315.75">얼마 전 흰지팡이의 날 때 점자 프린터를 다루시던 김병호님을 잠깐 뵌 게 다인데요.</span> <span class="seg" data-s="320.99">막연하게 접근성 분야의 권위자시라는 인식만 있었습니다.</span></p>
+          <p><span class="seg" data-s="324.29">그런 제가 김병호님의 대단함을 느낀 부분이 두 가지 있습니다.</span> <span class="seg" data-s="327.79">하나는 동일한 회사를 정년까지 다니셨다는 것입니다.</span> <span class="seg" data-s="331.07">저만 해도 근로 의욕이 저하되어 퇴사하고 싶을 때가 많은데요.</span> <span class="seg" data-s="335.09">김병호님은 정년까지 왕성한 활동을 유지할 열정이 있으셨다는 것이 부럽습니다.</span></p>
+          <p><span class="seg" data-s="339.65">또 하나는 접근성 분야에서 일찌감치 활동하셨다는 것입니다.</span> <span class="seg" data-s="342.95">뉴스 기사를 찾아보니 1990년대에도 김병호님의 활약상이 보이더라고요.</span> <span class="seg" data-s="347.99">지금이야 접근성이라는 게 비록 실천까지는 못 하더라도 중요하다는 것을 다들 알지만,</span> <span class="seg" data-s="352.65">그런 개념조차 희박했을 90년대에 선구자로서 활동하셨다는 것이 존경스럽습니다.</span></p>
+          <p><span class="seg" data-s="358.09">그럼 김병호님, 이제 은퇴하시고 새 출발을 하시게 될 텐데요.</span> <span class="seg" data-s="361.39">사회생활 갓난아기인 제 입장에서는 한편으로는 부러우면서도,</span> <span class="seg" data-s="364.47">다른 한편으로는 지금까지와는 다른 도전을 하시게 될 그 마음이 상상되어 응원을 보내고 싶기도 합니다.</span></p>
+          <p><span class="seg" data-s="370.21">그동안 정말 고생 많으셨습니다.</span> <span class="seg" data-s="371.71">푹 쉬시다가 또 언젠가 우리 사회에, 또 저희에게 기여해 주세요.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-amber" id="m11" data-start="379.23" data-name="이상수">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">상수</span>
+              <div class="who"><h3 id="m11-h">이상수 <span class="role">디자인팀</span></h3></div>
+              <button class="jump" type="button" data-t="379.23"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">이상수 님 메시지, </span>6분 19초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="379.23">안녕하세요.</span> <span class="seg" data-s="379.73">김병호 프로님, 디자인팀의 이상수입니다.</span> <span class="seg" data-s="383.39">40여 년을 한결같이 달려오신 프로님의 열정, 후배로서 늘 존경해 왔습니다.</span> <span class="seg" data-s="388.99">스마트폰 봉사 때 뵙던 그 따뜻한 에너지, 지금도 생생하네요.</span> <span class="seg" data-s="394.03">이제 더 넓고 멋진 세상에서 펼쳐질 프로님의 새로운 도전을 힘차게 응원합니다.</span> <span class="seg" data-s="400.55">감사합니다.</span> <span class="seg" data-s="401.65">화이팅!</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-indigo" id="m12" data-start="405.05" data-name="이의윤">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">의윤</span>
+              <div class="who"><h3 id="m12-h">이의윤 <span class="role">True Ability 회장</span></h3></div>
+              <button class="jump" type="button" data-t="405.05"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">이의윤 님 메시지, </span>6분 45초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="405.05">안녕하세요, 김병호 프로님. TA 회장 이의윤입니다.</span> <span class="seg" data-s="409.86">제가 프로님을 처음 알게 된 게 2014년이니까, 벌써 12년이라는 시간이 지났네요.</span> <span class="seg" data-s="416.52">시간이 참 빠른 것 같습니다.</span></p>
+          <p><span class="seg" data-s="418.85">접근성 기능을 처음 업무로 하던 때, 궁금한 것이 생기면 프로님께 여쭤보고 도움을 받을 수 있어서 정말 든든했습니다.</span> <span class="seg" data-s="427.83">또 어려운 상황에서도 새로운 길을 찾아 나가시는 모습을 보며 저 역시 마음을 다시 다잡을 수 있었습니다.</span></p>
+          <p><span class="seg" data-s="437.66">변화하는 회사 환경 속에서도 오랜 시간 묵묵히 자신의 자리를 지켜오신 모습이 참 존경스러웠습니다.</span> <span class="seg" data-s="446.51">저도 프로님을 본받아 제자리에서 할 수 있는 일들에 최선을 다하겠습니다.</span></p>
+          <p><span class="seg" data-s="452.06">그동안 삼성전자에서 정말 수고 많으셨습니다.</span> <span class="seg" data-s="456.64">함께할 수 있어서 감사했습니다.</span> <span class="seg" data-s="458.80">프로님의 새로운 여정을 진심으로 응원합니다.</span> <span class="seg" data-s="462.62">앞으로도 항상 건강하시고 행복하세요.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-orange" id="m13" data-start="467.64" data-name="이준">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">이준</span>
+              <div class="who"><h3 id="m13-h">이준 <span class="role">VD사업부</span></h3></div>
+              <button class="jump" type="button" data-t="467.64"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">이준 님 메시지, </span>7분 47초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="467.64">안녕하세요, 병호 프로님. VD사업부 이준입니다.</span> <span class="seg" data-s="471.20">작년에 입사해서 True Ability 활동을 하며 프로님을 처음 뵀는데,</span> <span class="seg" data-s="475.18">벌써 이렇게 인사를 드리게 됐네요.</span> <span class="seg" data-s="477.54">시간이 참 빠릅니다.</span></p>
+          <p><span class="seg" data-s="479.10">프로님 이야기를 처음 들었을 때 대단하시다는 생각이 먼저 들었어요.</span> <span class="seg" data-s="484.34">갑자기 시력을 잃으신 뒤 재활부터 다시 일터로 돌아오기까지</span> <span class="seg" data-s="489.54">매 순간마다 얼마나 큰 용기가 필요했을까 싶었고요.</span></p>
+          <p><span class="seg" data-s="493.74">제가 고민이 있어 찾아뵀을 때 제 얘기를 끝까지 들어 주시고,</span> <span class="seg" data-s="497.80">따뜻하게 조언해 주셔서 참 감사했어요.</span></p>
+          <p><span class="seg" data-s="501.62">저도 눈이 조금씩 나빠지다 보니,</span> <span class="seg" data-s="503.38">앞으로 회사 생활을 어떻게 이어 갈지 걱정될 때가 있는데,</span> <span class="seg" data-s="506.90">그럴 때마다 프로님을 떠올리면</span> <span class="seg" data-s="509.26">‘나도 내 일을 계속할 수 있겠구나’ 하는 용기가 나요.</span> <span class="seg" data-s="512.88">프로님이 제게 얼마나 든든한 선배님이신지</span> <span class="seg" data-s="515.66">꼭 한번 말씀드리고 싶었어요.</span></p>
+          <p><span class="seg" data-s="517.90">프로님, 43년 동안 정말 고생 많으셨고, 이제는 가장의 무게도 조금 내려놓으시고, 그동안 회사 다니시느라 미뤄 두셨던 일들도 마음껏 해 보셨으면 좋겠어요.</span> <span class="seg" data-s="530.82">프로님의 새로운 시작을 진심으로 응원합니다.</span> <span class="seg" data-s="533.90">늘 건강하시고 행복하세요.</span> <span class="seg" data-s="536.16">존경합니다, 프로님.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-blue" id="m14" data-start="541.41" data-name="정유진">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">유진</span>
+              <div class="who"><h3 id="m14-h">정유진</h3></div>
+              <button class="jump" type="button" data-t="541.41"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">정유진 님 메시지, </span>9분 1초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="541.41">병호 프로님, 안녕하세요.</span> <span class="seg" data-s="543.77">저는 정유진입니다.</span> <span class="seg" data-s="547.94">벌써 함께한 지 4년이라는 시간이 흘렀네요.</span> <span class="seg" data-s="553.02">패밀리 서포터즈에서 처음 뵙고, True Ability에서도 가끔 같이 활동하면서</span> <span class="seg" data-s="560.42">병호 프로님의 열정을 보면서 멋있다는 생각을 많이 했었습니다.</span> <span class="seg" data-s="567.64">고생 많으셨습니다.</span> <span class="seg" data-s="569.46">앞으로도 꽃길 걸으시길 바랍니다.</span> <span class="seg" data-s="571.84">행복하세요.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-teal" id="m15" data-start="573.02" data-name="정은영">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">은영</span>
+              <div class="who"><h3 id="m15-h">정은영 <span class="role">C랩</span></h3></div>
+              <button class="jump" type="button" data-t="573.02"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">정은영 님 메시지, </span>9분 33초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="573.02">안녕하세요, 저는 C랩에 있는 정은영이라고 합니다.</span> <span class="seg" data-s="580.20">40년 넘는 긴 시간 동안 자리를 지켜 오신 병호 프로님,</span> <span class="seg" data-s="584.40">접근성 커뮤니티에서 함께 머리를 맞대고 고민해 주신 덕분에</span> <span class="seg" data-s="588.72">많은 사람들이 따뜻함을 느낄 수 있는 세상을 만드는 데</span> <span class="seg" data-s="592.74">큰 힘을 얻은 것 같습니다.</span> <span class="seg" data-s="594.36">정말 감사합니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-amber" id="m16" data-start="595.40" data-name="조정은">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">정은</span>
+              <div class="who"><h3 id="m16-h">조정은</h3></div>
+              <button class="jump" type="button" data-t="595.40"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">조정은 님 메시지, </span>9분 55초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="595.40">안녕하세요, 조정은입니다.</span> <span class="seg" data-s="598.89">릴루미노라는 과제를 하면서 프로님을 처음 알게 되었었는데요,</span> <span class="seg" data-s="603.39">애니컴 페스티벌 때 프로님의 열정적인 모습이 아직도 눈에 생생하네요.</span> <span class="seg" data-s="609.53">이제 새롭게 시작될 프로님의 앞날에 항상 행복만 가득하시길 바라겠습니다.</span> <span class="seg" data-s="615.65">감사합니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-indigo" id="m17" data-start="616.73" data-name="최지수">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">지수</span>
+              <div class="who"><h3 id="m17-h">최지수 <span class="role">True Ability</span></h3></div>
+              <button class="jump" type="button" data-t="616.73"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">최지수 님 메시지, </span>10분 16초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="616.73">프로님, 안녕하세요.</span> <span class="seg" data-s="621.53">True Ability의 최지수입니다.</span> <span class="seg" data-s="624.30">정말 긴 시간 동안 정말 멋지게 달려오셨습니다.</span> <span class="seg" data-s="628.48">회사에서도 가정에서도 멋진 인생을 만들어 오신 선배님께 정말 큰 박수 보내 드립니다.</span> <span class="seg" data-s="633.70">이제부터 선배님만의 새로운 인생 2막을 기대하겠습니다.</span> <span class="seg" data-s="638.24">또 뵐게요.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-orange" id="m18" data-start="642.83" data-name="황미아">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar" aria-hidden="true">미아</span>
+              <div class="who"><h3 id="m18-h">황미아</h3></div>
+              <button class="jump" type="button" data-t="642.83"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">황미아 님 메시지, </span>10분 42초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="642.83">안녕하세요.</span> <span class="seg" data-s="644.13">김병호 과장님, 황미아입니다.</span> <span class="seg" data-s="648.49">삼성이라는 회사를 이렇게 오랜 기간 다니시고 이번에 무사히 퇴직하게 되셔서 너무 존경스럽고, 그동안 너무 수고 많으셨습니다.</span> <span class="seg" data-s="664.03">앞으로는 더 좋은 일로 자주 뵐 수 있게 노력하겠습니다.</span></p>
+            </div>
+          </div>
+        </li>
+        <li class="note c-blue" id="m19" data-start="668.81" data-name="마무리 인사">
+          <div class="card">
+            <span class="badge" aria-hidden="true"><span class="eq"><i></i><i></i><i></i></span>재생 중</span>
+            <div class="note-head">
+              <span class="avatar avatar-ic" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" class="ic"><path d="M4 10v4"/><path d="M8 7v10"/><path d="M12 4v16"/><path d="M16 7v10"/><path d="M20 10v4"/></svg></span>
+              <div class="who"><h3 id="m19-h">마무리 인사</h3></div>
+              <button class="jump" type="button" data-t="668.81"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><span class="sr-only">마무리 인사, </span>11분 8초부터 듣기</button>
+            </div>
+            <div class="note-body">
+          <p><span class="seg" data-s="668.81">저희가 준비한 음성 롤링페이퍼는 여기까지입니다.</span> <span class="seg" data-s="675.22">항상 행복하세요, 프로님.</span></p>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <img src="assets/true-ability-logo.png" alt="" width="960" height="238">
+  <p><b>2026년 11월 30일</b> · 삼성전자 True Ability 일동</p>
+</footer>
+
+<div class="mini" id="mini" role="region" aria-label="간편 플레이어" hidden>
+  <button class="mini-play" id="mini-play" type="button" aria-label="재생">
+    <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg>
+    <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4.5" width="4.2" height="15" rx="1.3"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.3"/></svg>
+  </button>
+  <div class="mini-info" aria-hidden="true">
+    <div class="mini-now" id="mini-now">음성 롤링페이퍼</div>
+    <div class="mini-bar"><i></i></div>
+  </div>
+  <div class="mini-time" id="mini-time" aria-hidden="true">0:00 / 11:20</div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const PEAKS = [0.29,0.52,0.39,0.36,0.55,0.74,0.55,0.53,0.77,0.74,0.63,0.72,0.79,0.62,0.79,0.6,0.41,0.67,0.57,0.6,0.57,0.35,0.65,0.65,0.6,0.65,0.74,0.74,0.39,0.77,0.72,0.72,0.63,0.6,0.2,0.74,0.58,0.69,0.55,0.72,0.65,0.53,0.55,0.65,0.57,0.67,0.6,0.44,0.63,0.7,0.62,0.72,0.63,0.57,0.63,0.72,0.57,0.31,0.58,0.7,0.55,0.58,0.6,0.49,0.67,0.63,0.57,0.57,0.34,0.77,0.85,0.74,0.79,0.69,1.0,1.0,0.83,0.98,1.0,1.0,0.96,0.38,0.77,0.77,0.63,0.65,0.62,0.76,0.72,0.69,0.55,0.69,0.63,0.6,0.7,0.65,0.63,0.57,0.6,0.32,0.65,0.85,0.53,0.74,0.62,0.65,0.34,0.58,0.83,0.74,0.39,0.72,0.62,0.57,0.58,0.49,0.57,0.36,0.57,0.5,0.34,0.53,0.52,0.26,0.7,0.69,0.58,0.74,0.53,0.65,0.53,0.52,0.6,0.67,0.76,0.67,0.69,0.58,0.63,0.67,0.7,0.72,0.21,0.5,0.6,0.79,0.58,0.58,0.62,0.72,0.53,0.41,0.35,0.63,0.62,0.69,0.67,0.45,0.76,0.55,0.62,0.65,0.57,0.31,0.62,0.63,0.72,0.63,0.69,0.12,0.77,0.52,0.57,0.57,0.58,0.5,0.77,0.34,0.65,0.19];
+  const $ = (s) => document.querySelector(s);
+  const audio = $('#audio');
+  const root = document.documentElement;
+  const body = document.body;
+  const pl = $('#pl'), playBtn = $('#play'), playLabel = $('#play-label');
+  const seek = $('#seek'), wave = $('#wave'), cur = $('#cur'), durEl = $('#dur');
+  const nowText = $('#now-text'), err = $('#err');
+  const resumeBtn = $('#resume'), resumeLabel = $('#resume-label');
+  const mini = $('#mini'), miniPlay = $('#mini-play'), miniNow = $('#mini-now'), miniTime = $('#mini-time');
+  const follow = $('#follow');
+  const STORE_KEY = 'kbh-rolling-paper:pos';
+  let D = 680.5;
+
+  /* ---------- progressive enhancement: swap native controls for ours ---------- */
+  audio.controls = false;
+  audio.hidden = true;
+  pl.hidden = false;
+  mini.hidden = false;
+  $('#follow-wrap').hidden = false;
+
+  const store = {
+    get() { try { return parseFloat(localStorage.getItem(STORE_KEY)) || 0; } catch (e) { return 0; } },
+    set(v) { try { localStorage.setItem(STORE_KEY, String(Math.floor(v))); } catch (e) {} },
+    clear() { try { localStorage.removeItem(STORE_KEY); } catch (e) {} },
+  };
+
+  const fmt = (t) => { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  const fmtKo = (t) => {
+    t = Math.max(0, Math.floor(t || 0));
+    const m = Math.floor(t / 60), s = t % 60;
+    if (!m) return s + '초';
+    return s ? m + '분 ' + s + '초' : m + '분';
+  };
+
+  /* ---------- transcript index ---------- */
+  const notes = [...document.querySelectorAll('.note')];
+  const segs = [...document.querySelectorAll('.seg')]
+    .map((el) => ({ el, t: parseFloat(el.dataset.s), note: el.closest('.note') }))
+    .sort((a, b) => a.t - b.t);
+  const findSeg = (t) => {
+    let lo = 0, hi = segs.length - 1, ans = -1;
+    while (lo <= hi) { const mid = (lo + hi) >> 1; if (segs[mid].t <= t + 0.15) { ans = mid; lo = mid + 1; } else hi = mid - 1; }
+    return ans;
+  };
+
+  /* ---------- waveform ---------- */
+  const NS = 'http://www.w3.org/2000/svg';
+  const baseSvg = wave.querySelector('svg.base');
+  const playedSvg = wave.querySelector('.played svg');
+  function drawWave() {
+    const w = wave.clientWidth || 600;
+    const n = Math.max(36, Math.min(PEAKS.length, Math.floor(w / 6)));
+    const bw = Math.max(2, (w / n) * 0.5);
+    const mk = (svg, withGrad) => {
+      svg.setAttribute('viewBox', `0 0 ${n} 100`);
+      svg.setAttribute('preserveAspectRatio', 'none');
+      svg.textContent = '';
+      if (withGrad) {
+        const defs = document.createElementNS(NS, 'defs');
+        defs.innerHTML = '<linearGradient id="wgrad" gradientUnits="userSpaceOnUse" x1="0" y1="8" x2="0" y2="92"><stop offset="0" stop-color="#FFC65A"/><stop offset="1" stop-color="#FF8A1F"/></linearGradient>';
+        svg.appendChild(defs);
+      }
+      for (let i = 0; i < n; i++) {
+        const a = Math.floor(i * PEAKS.length / n), b = Math.max(a + 1, Math.floor((i + 1) * PEAKS.length / n));
+        let v = 0; for (let j = a; j < b; j++) v = Math.max(v, PEAKS[j]);
+        const h = Math.max(6, v * 84);
+        const ln = document.createElementNS(NS, 'line');
+        ln.setAttribute('x1', i + 0.5); ln.setAttribute('x2', i + 0.5);
+        ln.setAttribute('y1', 50 - h / 2); ln.setAttribute('y2', 50 + h / 2);
+        ln.setAttribute('stroke-width', bw);
+        ln.setAttribute('stroke-linecap', 'round');
+        ln.setAttribute('vector-effect', 'non-scaling-stroke');
+        svg.appendChild(ln);
+      }
+    };
+    mk(baseSvg, false);
+    mk(playedSvg, true);
+  }
+  function drawMarks() {
+    const marks = wave.querySelector('.marks');
+    marks.textContent = '';
+    notes.forEach((n) => {
+      const i = document.createElement('i');
+      i.style.left = (parseFloat(n.dataset.start) / D * 100) + '%';
+      i.style.setProperty('--accent', getComputedStyle(n).getPropertyValue('--accent'));
+      marks.appendChild(i);
+    });
+  }
+  drawWave(); drawMarks();
+  let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(drawWave, 150); });
+
+  /* ---------- UI sync ---------- */
+  let activeSeg = -1, activeNote = null, lastUserScroll = 0;
+  const totalKo = () => '전체 ' + fmtKo(D);
+  function setSeekA11y(t) {
+    seek.value = Math.min(D, Math.round(t / 5) * 5);
+    seek.setAttribute('aria-valuetext', fmtKo(t) + ' / ' + totalKo());
+  }
+  function render() {
+    const t = audio.currentTime || 0;
+    const p = Math.min(100, (t / D) * 100) + '%';
+    wave.style.setProperty('--p', p);
+    mini.style.setProperty('--p', p);
+    cur.textContent = fmt(t);
+    miniTime.textContent = fmt(t) + ' / ' + fmt(D);
+    if (document.activeElement !== seek) setSeekA11y(t);
+
+    const started = t > 0.05 || !audio.paused;
+    const idx = started ? findSeg(t) : -1;
+    if (idx !== activeSeg) {
+      if (activeSeg >= 0) segs[activeSeg].el.classList.remove('on');
+      activeSeg = idx;
+      const note = idx >= 0 ? segs[idx].note : null;
+      if (idx >= 0) segs[idx].el.classList.add('on');
+      if (note !== activeNote) {
+        const prev = activeNote;
+        if (prev) { prev.classList.remove('on'); prev.removeAttribute('aria-current'); }
+        activeNote = note;
+        if (note) { note.classList.add('on'); note.setAttribute('aria-current', 'true'); }
+        const name = note ? note.dataset.name : '';
+        nowText.innerHTML = '';
+        if (name) {
+          const b = document.createElement('b'); b.textContent = name;
+          nowText.append('지금 ', b);
+          miniNow.innerHTML = ''; miniNow.append(b.cloneNode(true));
+        } else {
+          nowText.textContent = started ? '음성 롤링페이퍼' : '재생 버튼을 눌러 주세요';
+          miniNow.textContent = '음성 롤링페이퍼';
+        }
+        if (note && !audio.paused) maybeFollow(note, prev);
+      }
+    }
+  }
+  function inView(el, frac) {
+    const r = el.getBoundingClientRect(), vh = window.innerHeight;
+    const visible = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+    return visible > Math.min(r.height, vh) * frac;
+  }
+  function maybeFollow(note, prev) {
+    if (!follow.checked) return;
+    if (Date.now() - lastUserScroll < 5000) return;
+    const following = prev ? inView(prev, 0.2) : $('#transcript').getBoundingClientRect().top < window.innerHeight * 0.5;
+    if (!following || inView(note, 0.9)) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    note.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+  }
+  ['wheel', 'touchmove'].forEach((ev) => window.addEventListener(ev, () => { lastUserScroll = Date.now(); }, { passive: true }));
+  window.addEventListener('keydown', (e) => {
+    if (['PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End', ' '].includes(e.key) && e.target === body) lastUserScroll = Date.now();
+  });
+
+  let raf = 0;
+  const loop = () => { render(); raf = audio.paused ? 0 : requestAnimationFrame(loop); };
+  function setPlaying(on) {
+    body.classList.toggle('is-playing', on);
+    playLabel.textContent = on ? '일시정지' : '재생';
+    miniPlay.setAttribute('aria-label', on ? '일시정지' : '재생');
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = on ? 'playing' : 'paused';
+    if (on && !raf) raf = requestAnimationFrame(loop);
+  }
+
+  /* ---------- controls ---------- */
+  function showError(msg) { err.textContent = msg; err.hidden = false; }
+  function play() {
+    err.hidden = true;
+    const p = audio.play();
+    if (p && p.catch) p.catch((e) => {
+      if (e && e.name === 'NotAllowedError') return;
+      showError('음성을 재생하지 못했습니다. 아래 ‘음성 파일 내려받기’로 파일을 받아서 들어 주세요.');
+    });
+  }
+  const toggle = () => (audio.paused ? play() : audio.pause());
+  const seekTo = (t) => { audio.currentTime = Math.max(0, Math.min(D - 0.1, t)); render(); updatePosState(); };
+
+  playBtn.addEventListener('click', toggle);
+  miniPlay.addEventListener('click', toggle);
+  $('#back').addEventListener('click', () => seekTo(audio.currentTime - 10));
+  $('#fwd').addEventListener('click', () => seekTo(audio.currentTime + 10));
+  $('#rate').addEventListener('change', (e) => { audio.playbackRate = parseFloat(e.target.value) || 1; updatePosState(); });
+
+  seek.addEventListener('focus', () => setSeekA11y(audio.currentTime));
+  seek.addEventListener('keydown', () => { seek.value = Math.round(audio.currentTime / 5) * 5; });
+  seek.addEventListener('input', () => {
+    const t = parseFloat(seek.value);
+    seek.setAttribute('aria-valuetext', fmtKo(t) + ' / ' + totalKo());
+    seekTo(t);
+  });
+
+  document.querySelectorAll('.jump').forEach((b) => b.addEventListener('click', () => { seekTo(parseFloat(b.dataset.t)); play(); }));
+  segs.forEach((s) => s.el.addEventListener('click', () => {
+    if (window.getSelection && String(window.getSelection()).length) return;
+    seekTo(s.t); play();
+  }));
+
+  /* ---------- resume where you left off ---------- */
+  const saved = store.get();
+  if (saved > 15 && saved < D - 15) {
+    resumeLabel.textContent = '지난번 들은 곳(' + fmtKo(saved) + ')부터 이어 듣기';
+    resumeBtn.hidden = false;
+  }
+  resumeBtn.addEventListener('click', () => { seekTo(saved); play(); resumeBtn.hidden = true; });
+  let lastSave = 0;
+
+  /* ---------- audio events ---------- */
+  audio.addEventListener('loadedmetadata', () => {
+    if (isFinite(audio.duration) && audio.duration > 0) {
+      D = audio.duration; seek.max = Math.ceil(D);
+      durEl.textContent = fmt(D); drawMarks(); render(); updatePosState();
+    }
+  });
+  audio.addEventListener('play', () => setPlaying(true));
+  audio.addEventListener('pause', () => { setPlaying(false); render(); if (audio.currentTime > 15) store.set(audio.currentTime); });
+  audio.addEventListener('ended', () => { setPlaying(false); store.clear(); resumeBtn.hidden = true; });
+  audio.addEventListener('seeked', render);
+  audio.addEventListener('timeupdate', () => {
+    if (audio.paused) render();
+    const now = Date.now();
+    if (!audio.paused && now - lastSave > 5000 && audio.currentTime > 15) { store.set(audio.currentTime); lastSave = now; }
+  });
+  audio.addEventListener('error', () => showError('음성을 불러오지 못했습니다. 아래 ‘음성 파일 내려받기’로 파일을 받아서 들어 주세요.'));
+
+  /* ---------- lock screen / headset controls ---------- */
+  function updatePosState() {
+    if (!('mediaSession' in navigator) || !navigator.mediaSession.setPositionState) return;
+    try { navigator.mediaSession.setPositionState({ duration: D, playbackRate: audio.playbackRate || 1, position: Math.min(D, audio.currentTime || 0) }); } catch (e) {}
+  }
+  if ('mediaSession' in navigator) {
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: '김병호 프로님 음성 롤링페이퍼',
+        artist: 'True Ability 동료 일동',
+        album: '2026. 11. 30.',
+        artwork: [{ src: new URL('assets/icon.png', location.href).href, sizes: '512x512', type: 'image/png' }],
+      });
+      const h = (a, fn) => { try { navigator.mediaSession.setActionHandler(a, fn); } catch (e) {} };
+      h('play', play);
+      h('pause', () => audio.pause());
+      h('seekbackward', (d) => seekTo(audio.currentTime - ((d && d.seekOffset) || 10)));
+      h('seekforward', (d) => seekTo(audio.currentTime + ((d && d.seekOffset) || 10)));
+      h('seekto', (d) => { if (d && typeof d.seekTime === 'number') seekTo(d.seekTime); });
+      h('previoustrack', () => {
+          const t = audio.currentTime;
+        const target = notes.slice().reverse().find((n) => parseFloat(n.dataset.start) < t - 3);
+        seekTo(target ? parseFloat(target.dataset.start) : 0);
+      });
+      h('nexttrack', () => {
+        const t = audio.currentTime;
+        const target = notes.find((n) => parseFloat(n.dataset.start) > t + 0.5);
+        if (target) seekTo(parseFloat(target.dataset.start));
+      });
+    } catch (e) {}
+  }
+
+  /* ---------- mini player appears once the main player scrolls away ---------- */
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => {
+      const show = !e.isIntersecting && e.boundingClientRect.top < 0;
+      mini.classList.toggle('show', show);
+    }).observe($('.player'));
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
