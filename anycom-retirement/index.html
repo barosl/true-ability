@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>김병호 프로님 정년퇴직 기념 음성 롤링페이퍼</title>
-<meta name="description" content="43년 동안 함께 걸어온 시간에 감사하며, True Ability 동료들이 목소리로 전하는 인사입니다. 바로 듣거나 내려받거나 글로 읽을 수 있습니다.">
+<meta name="description" content="43년 동안 함께 걸어온 시간에 감사하며, True Ability 동료들이 목소리로 전하는 인사입니다. 바로 듣거나 다운로드하거나 글로 읽을 수 있습니다.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0B1440">
 <meta property="og:type" content="website">
@@ -417,9 +417,10 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
   <div class="paper">
     <div class="wrap stage">
 
-      <section class="player" aria-label="음성 듣기">
+      <section class="player" aria-labelledby="pl-title">
+        <h2 class="sr-only" id="pl-title">듣기와 다운로드</h2>
         <audio id="audio" src="anycom-retirement.mp3" preload="metadata" controls>
-          이 브라우저에서는 음성을 바로 재생할 수 없습니다. 아래 링크로 내려받아 들어 주세요.
+          이 브라우저에서는 음성을 바로 재생할 수 없습니다. 아래 링크로 다운로드해서 들어 주세요.
         </audio>
 
         <div id="pl" hidden>
@@ -473,11 +474,11 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
         <div class="dl-row">
           <a class="dl primary" href="anycom-retirement.mp3" download="김병호 프로님 정년퇴직 기념 음성 롤링페이퍼.mp3">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
-            <span>음성 파일 내려받기<small>MP3 · 16MB · 11분 20초</small></span>
+            <span>음성 파일 다운로드<small>MP3 · 16MB · 11분 20초</small></span>
           </a>
           <a class="dl secondary" href="transcript.txt" download="김병호 프로님 정년퇴직 기념 음성 롤링페이퍼 (글).txt">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
-            <span>글로 옮긴 파일 내려받기<small>TXT · 메시지 전문</small></span>
+            <span>글로 옮긴 파일 다운로드<small>TXT · 메시지 전문</small></span>
           </a>
         </div>
       </section>
@@ -989,7 +990,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
     if (p && p.catch) p.catch((e) => {
       if (e && (e.name === 'NotAllowedError' || e.name === 'AbortError')) return;
       if (noRange() && rangeState !== 'ready') return waitForFile();   // e.g. Safari refuses servers without Range support
-      showError('음성을 재생하지 못했습니다. 아래 ‘음성 파일 내려받기’로 파일을 받아서 들어 주세요.');
+      showError('음성을 재생하지 못했습니다. 아래 ‘음성 파일 다운로드’로 파일을 받아서 들어 주세요.');
     });
   }
   const toggle = () => {
@@ -1040,7 +1041,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
     })().catch(() => {
       rangeState = 'failed'; showLoad(null); statusEl.textContent = '';
       pendingSeek = null; wantPlay = false; setPlaying(!audio.paused); render();
-      showError('음성을 불러오지 못했습니다. 아래 ‘음성 파일 내려받기’로 파일을 받아서 들어 주세요.');
+      showError('음성을 불러오지 못했습니다. 아래 ‘음성 파일 다운로드’로 파일을 받아서 들어 주세요.');
     });
   }
   function swapToBlob() {
@@ -1112,7 +1113,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
   });
   audio.addEventListener('error', () => {
     if (!onBlob && rangeState !== 'ok' && rangeState !== 'failed') { if (blobUrl) swapToBlob(); else fetchWhole(); return; }
-    showError('음성을 불러오지 못했습니다. 아래 ‘음성 파일 내려받기’로 파일을 받아서 들어 주세요.');
+    showError('음성을 불러오지 못했습니다. 아래 ‘음성 파일 다운로드’로 파일을 받아서 들어 주세요.');
   });
 
   /* ---------- lock screen / headset controls ---------- */
