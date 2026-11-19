@@ -80,18 +80,9 @@ button,select,input{font:inherit;color:inherit;}
   padding:28px 0 56px;}
 .deco{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;}
 .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.45;}
-.blob.o{width:520px;height:520px;left:-180px;bottom:-220px;background:radial-gradient(circle,#FF912E,transparent 70%);animation:drift1 18s ease-in-out infinite;}
-.blob.b{width:560px;height:560px;right:-180px;top:-200px;background:radial-gradient(circle,#2066E2,transparent 70%);animation:drift2 21s ease-in-out infinite;}
-.blob.t{width:300px;height:300px;right:22%;bottom:-140px;background:radial-gradient(circle,#33CCCC,transparent 70%);opacity:.25;animation:drift1 24s ease-in-out infinite reverse;}
-@keyframes drift1{50%{transform:translate(50px,-36px) scale(1.1);}}
-@keyframes drift2{50%{transform:translate(-44px,40px) scale(1.08);}}
-.lines{position:absolute;inset:auto 0 0 0;height:70%;opacity:.45;}
-.lines svg{position:absolute;width:180%;height:100%;left:-40%;}
-.lines path{fill:none;stroke-linecap:round;}
-.lines .l1{stroke:rgba(120,170,255,.55);stroke-width:2;animation:flow 10s linear infinite;}
-.lines .l2{stroke:rgba(51,204,204,.4);stroke-width:1.6;animation:flow 14s linear infinite reverse;}
-.lines .l3{stroke:rgba(255,145,46,.38);stroke-width:1.6;animation:flow 18s linear infinite;}
-@keyframes flow{to{stroke-dashoffset:-2400;}}
+.blob.o{width:520px;height:520px;left:-180px;bottom:-220px;background:radial-gradient(circle,#FF912E,transparent 70%);}
+.blob.b{width:560px;height:560px;right:-180px;top:-200px;background:radial-gradient(circle,#2066E2,transparent 70%);}
+.blob.t{width:300px;height:300px;right:22%;bottom:-140px;background:radial-gradient(circle,#33CCCC,transparent 70%);opacity:.25;}
 
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:44px;}
 .logo{height:44px;width:auto;}
@@ -331,13 +322,6 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
   <div class="hero">
     <div class="deco" aria-hidden="true">
       <div class="blob o"></div><div class="blob b"></div><div class="blob t"></div>
-      <div class="lines">
-        <svg viewBox="0 0 1200 400" preserveAspectRatio="none">
-          <path class="l1" d="M-100,230 C150,160 350,300 600,230 S1050,160 1300,240" stroke-dasharray="10 14"/>
-          <path class="l2" d="M-100,300 C200,240 380,380 640,300 S1080,240 1320,320" stroke-dasharray="6 16"/>
-          <path class="l3" d="M-100,360 C180,320 400,430 660,360 S1100,310 1320,380" stroke-dasharray="4 18"/>
-        </svg>
-      </div>
     </div>
     <div class="wrap">
       <div class="topbar" aria-hidden="true">
