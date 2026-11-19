@@ -143,6 +143,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
 .seek::-webkit-slider-thumb{-webkit-appearance:none;width:2px;height:64px;}
 .seek::-moz-range-thumb{width:2px;height:64px;border:0;}
 .wave:has(.seek:focus-visible){outline:3px solid var(--amber);outline-offset:6px;}
+#load{color:var(--amber);}
 .times{display:flex;justify-content:space-between;margin-top:18px;font-size:14px;font-weight:700;color:var(--lav2);font-variant-numeric:tabular-nums;}
 
 .pl-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);}
@@ -357,7 +358,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
                 <div class="marks" aria-hidden="true"></div>
                 <input class="seek" id="seek" type="range" min="0" max="680" step="5" value="0" aria-label="재생 위치" aria-valuetext="0초 / 전체 11분 20초">
               </div>
-              <div class="times" aria-hidden="true"><span id="cur">0:00</span><span id="dur">11:20</span></div>
+              <div class="times" aria-hidden="true"><span id="cur">0:00</span><span id="load"></span><span id="dur">11:20</span></div>
             </div>
           </div>
           <div class="pl-ctrl">
@@ -384,6 +385,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
         </div>
 
         <p class="err" id="err" role="alert" hidden></p>
+        <p class="sr-only" id="status" role="status"></p>
 
         <div class="dl-row">
           <a class="dl primary" href="anycom-retirement.mp3" download="김병호 프로님 정년퇴직 기념 음성 롤링페이퍼.mp3">
@@ -794,13 +796,21 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
 
   /* ---------- UI sync ---------- */
   let activeSeg = -1, activeNote = null, lastUserScroll = 0;
+  /* Browsers can only jump around in a media file when the server honours HTTP Range requests.
+     GitHub Pages does, GitLab Pages does not. On such servers the whole file is fetched once into
+     a blob: URL (always seekable) and seeks wait until it is ready. */
+  const SRC = audio.getAttribute('src');
+  let rangeState = 'unknown';   // unknown -> ok | none -> loading -> ready | failed
+  let blobUrl = null, onBlob = false, pendingSeek = null, wantPlay = false, swapping = false, swapTime = 0;
+  const noRange = () => rangeState === 'none' || rangeState === 'loading' || (rangeState === 'ready' && !onBlob);
+  const pos = () => (pendingSeek !== null ? pendingSeek : swapping ? swapTime : (audio.currentTime || 0));
   const totalKo = () => '전체 ' + fmtKo(D);
   function setSeekA11y(t) {
     seek.value = Math.min(D, Math.round(t / 5) * 5);
     seek.setAttribute('aria-valuetext', fmtKo(t) + ' / ' + totalKo());
   }
   function render() {
-    const t = audio.currentTime || 0;
+    const t = pos();
     const p = Math.min(100, (t / D) * 100) + '%';
     wave.style.setProperty('--p', p);
     mini.style.setProperty('--p', p);
@@ -808,7 +818,7 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
     miniTime.textContent = fmt(t) + ' / ' + fmt(D);
     if (document.activeElement !== seek) setSeekA11y(t);
 
-    const started = t > 0.05 || !audio.paused;
+    const started = t > 0.05 || !audio.paused || wantPlay;
     const idx = started ? findSeg(t) : -1;
     if (idx !== activeSeg) {
       if (activeSeg >= 0) segs[activeSeg].el.classList.remove('on');
@@ -864,25 +874,95 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
 
   /* ---------- controls ---------- */
   function showError(msg) { err.textContent = msg; err.hidden = false; }
+  const loadEl = $('#load'), statusEl = $('#status');
+  const showLoad = (f) => { loadEl.textContent = f == null ? '' : '불러오는 중 ' + Math.round(f * 100) + '%'; };
+  const waitForFile = () => { wantPlay = true; setPlaying(true); };
   function play() {
     err.hidden = true;
+    if (noRange()) {
+      fetchWhole();
+      if (pendingSeek !== null || swapping) return waitForFile();
+    }
     const p = audio.play();
     if (p && p.catch) p.catch((e) => {
-      if (e && e.name === 'NotAllowedError') return;
+      if (e && (e.name === 'NotAllowedError' || e.name === 'AbortError')) return;
+      if (noRange() && rangeState !== 'ready') return waitForFile();   // e.g. Safari refuses servers without Range support
       showError('음성을 재생하지 못했습니다. 아래 ‘음성 파일 내려받기’로 파일을 받아서 들어 주세요.');
     });
   }
-  const toggle = () => (audio.paused ? play() : audio.pause());
-  const seekTo = (t) => { audio.currentTime = Math.max(0, Math.min(D - 0.1, t)); render(); updatePosState(); };
+  const toggle = () => {
+    if (wantPlay && audio.paused) { wantPlay = false; setPlaying(false); return; }   // cancel a play waiting for the file
+    if (audio.paused) play(); else audio.pause();
+  };
+  const seekTo = (t) => {
+    t = Math.max(0, Math.min(D - 0.1, t));
+    if (noRange()) {
+      if (!audio.paused) { wantPlay = true; audio.pause(); }   // don't keep playing the wrong part meanwhile
+      pendingSeek = t;
+      if (blobUrl) swapToBlob(); else fetchWhole();
+    } else {
+      audio.currentTime = t;
+    }
+    render(); updatePosState();
+  };
+
+  const probe = (async () => {
+    try {
+      const ctl = new AbortController();
+      const r = await fetch(SRC, { headers: { Range: 'bytes=0-1' }, signal: ctl.signal });
+      rangeState = r.status === 200 ? 'none' : 'ok';
+      ctl.abort();
+    } catch (e) { rangeState = 'ok'; }
+  })();
+  let fetching = false;
+  function fetchWhole() {
+    if (fetching || rangeState === 'ok' || rangeState === 'failed' || rangeState === 'ready') return;
+    if (rangeState === 'unknown') { probe.then(fetchWhole); return; }
+    fetching = true; rangeState = 'loading'; showLoad(0);
+    statusEl.textContent = '음성을 불러오는 중입니다.';
+    (async () => {
+      const r = await fetch(SRC);
+      if (!r.ok || !r.body) throw new Error('HTTP ' + r.status);
+      const total = Number(r.headers.get('content-length')) || 0, reader = r.body.getReader(), parts = [];
+      let got = 0;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        parts.push(value); got += value.length;
+        if (total) showLoad(got / total);
+      }
+      blobUrl = URL.createObjectURL(new Blob(parts, { type: 'audio/mpeg' }));
+      rangeState = 'ready'; showLoad(null); statusEl.textContent = '';
+      // Swap right away only if something is waiting; otherwise keep playing and swap on the next seek.
+      if (pendingSeek !== null || audio.error || (wantPlay && audio.paused)) swapToBlob();
+    })().catch(() => {
+      rangeState = 'failed'; showLoad(null); statusEl.textContent = '';
+      pendingSeek = null; wantPlay = false; setPlaying(!audio.paused); render();
+      showError('음성을 불러오지 못했습니다. 아래 ‘음성 파일 내려받기’로 파일을 받아서 들어 주세요.');
+    });
+  }
+  function swapToBlob() {
+    if (onBlob || swapping) return;
+    swapping = true; swapTime = pos();
+    const resume = wantPlay || !audio.paused;
+    wantPlay = resume;
+    audio.addEventListener('loadedmetadata', () => {
+      const t = pendingSeek !== null ? pendingSeek : swapTime;
+      pendingSeek = null; swapping = false; onBlob = true; err.hidden = true;
+      audio.currentTime = t;
+      if (resume) { wantPlay = false; play(); } else { wantPlay = false; render(); }
+    }, { once: true });
+    audio.src = blobUrl;
+  }
 
   playBtn.addEventListener('click', toggle);
   miniPlay.addEventListener('click', toggle);
-  $('#back').addEventListener('click', () => seekTo(audio.currentTime - 10));
-  $('#fwd').addEventListener('click', () => seekTo(audio.currentTime + 10));
+  $('#back').addEventListener('click', () => seekTo(pos() - 10));
+  $('#fwd').addEventListener('click', () => seekTo(pos() + 10));
   $('#rate').addEventListener('change', (e) => { audio.playbackRate = parseFloat(e.target.value) || 1; updatePosState(); });
 
-  seek.addEventListener('focus', () => setSeekA11y(audio.currentTime));
-  seek.addEventListener('keydown', () => { seek.value = Math.round(audio.currentTime / 5) * 5; });
+  seek.addEventListener('focus', () => setSeekA11y(pos()));
+  seek.addEventListener('keydown', () => { seek.value = Math.round(pos() / 5) * 5; });
   seek.addEventListener('input', () => {
     const t = parseFloat(seek.value);
     seek.setAttribute('aria-valuetext', fmtKo(t) + ' / ' + totalKo());
@@ -912,20 +992,26 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
     }
   });
   audio.addEventListener('play', () => setPlaying(true));
-  audio.addEventListener('pause', () => { setPlaying(false); render(); if (audio.currentTime > 15) store.set(audio.currentTime); });
+  audio.addEventListener('pause', () => {
+    if (wantPlay && (rangeState === 'loading' || swapping || pendingSeek !== null)) return;   // paused only to wait for the file
+    setPlaying(false); render(); if (audio.currentTime > 15) store.set(audio.currentTime);
+  });
   audio.addEventListener('ended', () => { setPlaying(false); store.clear(); resumeBtn.hidden = true; });
   audio.addEventListener('seeked', render);
   audio.addEventListener('timeupdate', () => {
     if (audio.paused) render();
     const now = Date.now();
-    if (!audio.paused && now - lastSave > 5000 && audio.currentTime > 15) { store.set(audio.currentTime); lastSave = now; }
+    if (!audio.paused && !swapping && now - lastSave > 5000 && audio.currentTime > 15) { store.set(audio.currentTime); lastSave = now; }
   });
-  audio.addEventListener('error', () => showError('음성을 불러오지 못했습니다. 아래 ‘음성 파일 내려받기’로 파일을 받아서 들어 주세요.'));
+  audio.addEventListener('error', () => {
+    if (!onBlob && rangeState !== 'ok' && rangeState !== 'failed') { if (blobUrl) swapToBlob(); else fetchWhole(); return; }
+    showError('음성을 불러오지 못했습니다. 아래 ‘음성 파일 내려받기’로 파일을 받아서 들어 주세요.');
+  });
 
   /* ---------- lock screen / headset controls ---------- */
   function updatePosState() {
     if (!('mediaSession' in navigator) || !navigator.mediaSession.setPositionState) return;
-    try { navigator.mediaSession.setPositionState({ duration: D, playbackRate: audio.playbackRate || 1, position: Math.min(D, audio.currentTime || 0) }); } catch (e) {}
+    try { navigator.mediaSession.setPositionState({ duration: D, playbackRate: audio.playbackRate || 1, position: Math.min(D, pos()) }); } catch (e) {}
   }
   if ('mediaSession' in navigator) {
     try {
@@ -938,16 +1024,16 @@ h1 .b{display:block;font-size:clamp(44px,9.6vw,84px);
       const h = (a, fn) => { try { navigator.mediaSession.setActionHandler(a, fn); } catch (e) {} };
       h('play', play);
       h('pause', () => audio.pause());
-      h('seekbackward', (d) => seekTo(audio.currentTime - ((d && d.seekOffset) || 10)));
-      h('seekforward', (d) => seekTo(audio.currentTime + ((d && d.seekOffset) || 10)));
+      h('seekbackward', (d) => seekTo(pos() - ((d && d.seekOffset) || 10)));
+      h('seekforward', (d) => seekTo(pos() + ((d && d.seekOffset) || 10)));
       h('seekto', (d) => { if (d && typeof d.seekTime === 'number') seekTo(d.seekTime); });
       h('previoustrack', () => {
-          const t = audio.currentTime;
+          const t = pos();
         const target = notes.slice().reverse().find((n) => parseFloat(n.dataset.start) < t - 3);
         seekTo(target ? parseFloat(target.dataset.start) : 0);
       });
       h('nexttrack', () => {
-        const t = audio.currentTime;
+        const t = pos();
         const target = notes.find((n) => parseFloat(n.dataset.start) > t + 0.5);
         if (target) seekTo(parseFloat(target.dataset.start));
       });
